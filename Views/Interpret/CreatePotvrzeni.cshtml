@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Potvrzení o vytvoření";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link href="@Url.Content("~/Content/vytvoreniInterpreta.css")" rel="stylesheet" type="text/css" />
+}
+
+
+<div class="container">
+    <div class="d-flex justify-content-center h-100">
+        <div class="card">
+            <div class="card-header">
+                <h3>Vytvoření interpreta</h3>
+            </div>
+
+            <div class="card-body">
+                <form>
+                    <div class="container">
+                        <div class="row">
+                            <div class="input-group-prepend alert alert-success" role="alert">
+                                <h5>Interpret byl úspěšně vytvořen. Nyní jste správcem Vámi vytvořeného interpreta.</h5>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-footer">
+                <div class="d-flex justify-content-center links">
+                    <h5>
+                        @Html.ActionLink("Časté otázky", "FAQ", "Account")
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<DiplomovaPrace.Models.Prispevek>
+
+@{
+    ViewBag.Title = Session["interpretNazev"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<div class="btn btn-success pull-right">
+    @Html.ActionLink("Nový příspěvek", "../Prispevek/NovyPrispevek")
+</div>
+
+<h4> @Html.Label(Session["interpretNazev"].ToString(), new { style = "width:60%; color: orange;" }) </h4>
+
+
+<table id="myTable" class="table border-0">
+
+
+        @foreach(var prispevek in Model)
+        {
+            <tr>
+                <td>
+                    <h5>@Html.ActionLink(@prispevek.NazevPisne, "SeznamPrispevkuNazev", new { nazevPrispevku = prispevek.NazevPisne })</h5>
+                   
+                </td>
+
+            </tr>
+        }
+
+    
+</table>

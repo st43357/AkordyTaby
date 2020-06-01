@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "Rozcestník";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<div class="container">
+    <div class="row justify-content-center">
+
+        <h4>Příspěvek úspěšně upraven!</h4>
+
+    </div>
+
+    <div class="row justify-content-center">
+        <h5>Kudy dál?</h5>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="btn btn-success">
+            @Html.ActionLink("Vaše příspěvky", "VlastniPrispevky", "Uzivatel")
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        nebo
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="btn btn-success">
+            @Html.ActionLink("Příspěvky", "Index", "Prispevek")
+        </div>
+    </div>
+
+
+</div>

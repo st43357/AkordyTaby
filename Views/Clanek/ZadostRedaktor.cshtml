@@ -1,0 +1,59 @@
+﻿@model DiplomovaPrace.Models.Zadost
+
+@{
+    ViewBag.Title = "Žádost o redaktora";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("ZadostRedaktor", "Clanek", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="card-header">
+
+    </div>
+    <div class="card-body">
+        <form>
+            <div class="input-group form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-user"> Proč právě Vy?</i></span>
+                </div>
+                @Html.TextAreaFor(model => model.Komentar, new { htmlAttributes = new { @class = "form-control", @id = "Komentar" } })
+                <div class="container">
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
+
+            <input id="odeslat" type="submit" value="Odeslat žádost" class="btn btn-success" />
+        </form>
+    </div>    
+  
+}
+
+
+@section scripts {
+
+    <script src="@Url.Content("//cdn.tinymce.com/4/tinymce.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/initTinyMCE.js")"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#odeslat').click(function () {
+
+                tinyMCE.triggerSave();
+                var content = $('#Komentar').val();
+
+                if ($('#Komentar').val().length == 0) {
+                    alert("Důvod nemůže být prázdný!");
+                    return false;
+                }
+            })
+        })
+
+    </script>
+
+}

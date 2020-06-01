@@ -1,0 +1,137 @@
+﻿@model DiplomovaPrace.Models.UzivatelViewModels.VlastniPrispevkyViewModel
+
+@{
+    ViewBag.Title = "Vlastní příspěvky";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<div class="alert alert-success" role="alert">
+    <h4>Příspěvky uživatele @Session["prezdivka"]</h4>
+</div>
+
+<ul class="nav nav-pills">
+    @* rozlišení který z linků je aktivní *@
+    @if (Session["kategorieVlastniPrispevky"].ToString() == "prispevky")
+    {
+        <li class="nav-item">
+            @Html.ActionLink("Příspěvky", "../Uzivatel/VlastniPrispevky", new { kategorie = "prispevky" }, new { @class = "nav-link active", @id = "prispevky" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Články", "../Uzivatel/VlastniPrispevky", new { kategorie = "clanky" }, new { @class = "nav-link", @id = "clanky" })
+        </li>
+
+    }
+    else
+    {
+
+        <li class="nav-item">
+            @Html.ActionLink("Příspěvky", "../Uzivatel/VlastniPrispevky", new { kategorie = "prispevky" }, new { @class = "nav-link", @id = "prispevky" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Články", "../Uzivatel/VlastniPrispevky", new { kategorie = "clanky" }, new { @class = "nav-link active", @id = "clanky" })
+        </li>
+    }
+
+
+</ul>
+
+<div class="vypis">
+    @* pokud uživatel požaduje zobrazit příspěvky *@
+    @if (Session["kategorieVlastniPrispevky"].ToString() == "prispevky")
+    {
+        //zjistím zda nějaké příspěvky uživatel vložil
+        if (Model.prispevky.Count() != 0)
+        {
+            <table class="table">
+                @foreach (var prispevek in Model.prispevky)
+                {
+                    <tr>
+                        <td scope="col">
+                            @Html.ActionLink(prispevek.NazevPisne, "../Prispevek/KonkretniPrispevek", new { id = prispevek.Id })
+                        </td>
+                        <td scope="col">
+                            @prispevek.Interpret.Nazev
+                        </td>
+                        <td scope="col">
+                            @prispevek.TypPrispevku
+                        </td>
+                        <td scope="col" class="btn btn-warning">
+                            @Html.ActionLink("Upravit", "../Prispevek/Edit", new { id = prispevek.Id })
+                        </td>
+                        <td scope="col" class="btn btn-danger">
+                            @Html.ActionLink("Smazat", "../Prispevek/Delete", new { id = prispevek.Id }, new { onclick = "return confirm('Nevratný krok! Opravdu smazat vybraný příspěvek?');" })
+                        </td>
+
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <p>Uživatel nemá žádný vložený příspěvěk. :/</p>
+        }
+
+    }
+
+    else
+
+    { //uživatel požaduje zobrazit vlastní články
+
+        //zjistím zda nějaké články uživatel vložil
+        if (Model.clanky.Count() != 0)
+        {
+            <table class="table">
+                @foreach (var clanek in Model.clanky)
+                {
+                    <tr>
+                        <td scope="col">
+                           @{ @Html.ActionLink(WebUtility.HtmlDecode(clanek.Titulek), "KonkretniClanek", "Clanek", routeValues: new { id = clanek.Id, }, htmlAttributes: null) }
+                        </td>
+                        <td scope="col">
+                            @clanek.Kategorie
+                        </td>
+                        <td scope="col" class="btn btn-warning">
+                            @Html.ActionLink("Upravit", "Edit", "Clanek", routeValues: new { id = clanek.Id, }, htmlAttributes: null)
+                        </td>
+                        <td scope="col" class="btn btn-danger">
+                            @Html.ActionLink("Smazat", "Delete", "Clanek", new { id = @clanek.Id }, new { onclick = "return confirm('Nevratný krok! Opravdu smazat vybraný článek?');" })
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <p>Uživatel nemá žádný vložený článek. :/</p>
+        }
+
+    }
+</div>
+
+@section scripts {
+
+    <script>
+
+        $(document).ready(function () {
+
+            //po kliknutí na příspěvky zobrazím tabulku příspěvků které vložil uživatel
+            $('#prispevky').click(function () {
+                //odeberu class active ze clanku a přidám k příspěvkům
+                $("#clanky").removeClass("active");
+                $("#prispevky").addClass("active");
+            });
+
+            //po kliknutí na články zobrazím tabulku článků které vložil uživatel
+            $('#clanky').click(function () {
+                //odeberu class active z prispevku a přidám ke článkům
+                $("#prispevky").removeClass("active");
+                $("#clanky").addClass("active");
+
+            });
+        })
+
+    </script>
+
+}

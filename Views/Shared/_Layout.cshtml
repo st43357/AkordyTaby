@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <meta name="author" content="Vaníček David" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <link rel="stylesheet/scss" type="text/css" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet/scss" type="text/css" href="~/Content/bootstrap.css" />
+    <link rel="stylesheet/scss" type="text/css" href="~/Content/_bootswatch.scss" />
+    <link rel="stylesheet/scss" type="text/css" href="~/Content/_variables.scss" />
+
+
+
+
+    @*searchbox*@
+    <link rel="stylesheet" type="text/css" href="~/Content/searchbox.css" />
+
+    @*použije css ve @Style u jednotlivých view*@
+    @RenderSection("styles", false)
+
+
+
+
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <!--Navbar -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <h3>@Html.ActionLink("AkordyTaby", "../Home/Index")</h3>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
+                            aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
+                        <ul class="navbar-nav mr-auto">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <li class="nav-item active">
+                                            <a class="nav-link">
+                                                @Html.ActionLink("Interpreti", "../Interpret/Index")
+                                                <span class="sr-only">(current)</span>
+                                            </a>
+                                        </li>
+                                    </div>
+                                    <div class="col">
+                                        <li class="nav-item">
+                                            <a class="nav-link">
+                                                @Html.ActionLink("Příspěvky", "../Prispevek/Index")
+                                            </a>
+                                        </li>
+                                    </div>
+                                    <div class="col">
+                                        <li class="nav-item">
+                                            <a class="nav-link">
+                                                @Html.ActionLink("Články", "../Clanek/Index")
+                                            </a>
+                                        </li>
+                                    </div>
+                                    <div class="col">
+                                        <li class="nav-item">
+                                            <a class="nav-link">
+                                                @Html.ActionLink("FAQ", "../Account/FAQ")
+                                            </a>
+                                        </li>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
+
+
+
+                        <ul class="navbar-nav ml-auto nav-flex-icons">
+                            <li class="nav-item">
+                                <div class="container h-100">
+                                    <div class="d-flex justify-content-center h-100">
+                                        <div class="searchbar">
+                                            <input class="search_input" type="text" name="term" placeholder="Vyhledat uživatele...">
+                                            <a class="search_icon"><i class="fa fa-search"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link">
+
+                                    <a class="nav-link" href="@Url.Action("../Zprava/Index")">
+                                        @if (Session["neprecteneZpravy"] != null && Session["neprecteneZpravy"].ToString() != "")
+                                        {
+                                            @Session["neprecteneZpravy"].ToString()
+
+                                            int pocetNeprectenychZprav = int.Parse(@Session["neprecteneZpravy"].ToString());
+
+                                            if (pocetNeprectenychZprav > 0)
+                                            {
+                                                //červená obálka pokud nepřečtená zpráva
+                                                <i class="fa fa-envelope" style="color:#FF0000;"></i>
+                                            }
+                                            else
+                                            {
+                                                //bílá obálka pokud všechny zprávy přečtené
+                                                <i class="fa fa-envelope"></i>
+                                            }
+                                        }
+
+
+                                    </a>
+
+                            </li>
+                            <li class="nav-item avatar dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    <img src="@Url.Content(Session["avatar"].ToString())" class="rounded-circle z-depth-0" width="50" height="50"
+                                         alt="avatar image">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-55">
+                                    <a href="@Url.Action("../Uzivatel/Index", new { prezdivkaUzivatele = @Session["prezdivka"] })" class="dropdown-item">Zobrazit profil</a>
+                                    <a href="@Url.Action("../Uzivatel/VlastniPrispevky")" class="dropdown-item">Vlastní příspěvky</a>
+                                    <a href="@Url.Action("../Uzivatel/VaseZadosti")" class="dropdown-item">Vaše žádosti</a>
+                                    <a href="@Url.Action("../Uzivatel/VasiInterpreti")" class="dropdown-item">Vaši interpreti</a>
+                                    <a href="@Url.Action("../Account/LogOff")" class="dropdown-item">Odhlásit</a>
+                                </div>
+                            </li>
+
+                          
+                        </ul>
+                    </div>
+                </nav>
+                <!--/.Navbar -->
+
+                <div class="container body-content">
+                    @RenderBody()
+                    <hr />
+                    <footer>
+
+                        @*pokud jsou aktuální stránky spojené s HomeControllerem pak skryj tlačítko podpora*@
+                        @if (!ViewContext.RouteData.Values["Controller"].ToString().Contains("Home"))
+                        {
+                            <div id="podporaTlacitko" class="btn btn-info">
+                                @Html.ActionLink("Podpora", "../Home/PodporaKontakt")
+                            </div>
+                        }
+
+                        <p>&copy; @DateTime.Now.Year - AkordyTaby</p>
+                    </footer>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+        <script src="~/Scripts/jquery.min.js"></script>
+        <script src="~/Scripts/popper.min.js"></script>
+        @*<script src="~/Scripts/bootstrap.min.js"></script>*@
+
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+
+
+
+        @*spustí scripty v section script na ve view*@
+        @RenderSection("scripts", required: false)
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                //po uvolnění tlačítka při psaní vyhledávané přezdívky
+                $('.search_input').autocomplete({
+                    source: function (request, response) {
+                        jQuery.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            url: "/Uzivatel/VyhledaniUzivatele",
+                            data: {
+                                prezdivka: $('.search_input').val() },
+                            success: function (data) {
+                                response(jQuery.map(data, function (item) {
+                                    return { label: item.Prezdivka, value: item.Prezdivka, id: item.Id };
+                                }))
+                            },
+                        });
+                    },
+                    select: function (event, ui) {
+                        var link = '@Url.Action("Index", "Uzivatel", new { prezdivkaUzivatele = "nahradit" })';
+                        link = link.replace("nahradit", ui.item.value /*ui.item.Prezdivka*/);
+                        location.href = link;
+                    }
+                });
+
+            });
+
+        </script>
+
+    </body>
+</html>

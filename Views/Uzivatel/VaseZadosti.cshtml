@@ -1,0 +1,226 @@
+﻿@model DiplomovaPrace.Models.UzivatelViewModels.VazeZadostiViewModel
+
+@{
+    ViewBag.Title = "Vaše žádosti";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<ul class="nav nav-pills">
+    @* odlišení aktivní položky v navigačním menu *@
+    @if (@TempData["typyZadosti"].ToString() == "cekajiciNaPrihlaseneho")
+    {
+        <li class="nav-item">
+            @Html.ActionLink("Příspěvky", "../Uzivatel/VaseZadosti", new { typyZadosti = "cekajiciNaPrihlaseneho" }, new { @class = "nav-link active", @id = "cekajiciNaPrihlaseneho" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Příspěvky", "../Uzivatel/VaseZadosti", new { typyZadosti = "zadostiCekajiciNaPotvrzeniOstatnimi" }, new { @class = "nav-link", @id = "zadostiCekajiciNaPotvrzeniOstatnimi" })
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            @Html.ActionLink("Příspěvky", "../Uzivatel/VaseZadosti", new { typyZadosti = "cekajiciNaPrihlaseneho" }, new { @class = "nav-link", @id = "cekajiciNaPrihlaseneho" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Příspěvky", "../Uzivatel/VaseZadosti", new { typyZadosti = "cekajiciNaPotvrzeniOstatnimi" }, new { @class = "nav-link active", @id = "zadostiCekajiciNaPotvrzeniOstatnimi" })
+        </li>
+    }
+</ul>
+
+
+
+
+@if (@TempData["typyZadosti"].ToString() == "cekajiciNaPrihlaseneho")
+{
+
+    <div class="alert alert-success" role="alert">
+        <h5>Žádosti čekající na Vaše schválení</h5>
+    </div>
+
+    if (Model.cekajiciNaPotvrzeniPrihlaseneho.Count() != 0)  //zjistím zda existujé žádosti které uživatel může potvrdit
+    {
+        <table class="table">
+            @foreach (var zadost in Model.cekajiciNaPotvrzeniPrihlaseneho)
+            {
+                <tr>
+                    <td scope="col">
+                        @Html.ActionLink(zadost.TypZadosti.ToString(), "../Zadost/KonkretniZadost", new { id = zadost.Id })
+                    </td>
+                    <td scope="col">
+                        @Html.ActionLink(@zadost.ZadostOd.Prezdivka, "../Uzivatel/Index", new { prezdivkaUzivatele = zadost.ZadostOd.Prezdivka })
+                    </td>
+                    <td scope="col" class="text-warning">
+                        @zadost.StavZadosti
+                    </td>
+                    <td scope="col" class="btn btn-primary">
+                        @Html.ActionLink("Zobrazit žádost", "../Zadost/KonkretniZadost", new { id = zadost.Id })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else //žádné žádosti čekající na vyřízení přihlášeným uživatelem
+    {
+        <p> Žádné nevyřízené žádosti. :)</p>
+        <br />
+    }
+
+    <div class="alert alert-success" role="alert">
+        <h5>Vámi dříve vyřešené žádosti</h5>
+    </div>
+
+    //zjistím zda uživatel již potvrdil dřív žádost ostatních uživatelů
+    if (Model.cekajiciNaPotvrzeniPrihlasenehoVyresene.Count() != 0)
+    {
+        <table class="table">
+            @foreach (var zadost in Model.cekajiciNaPotvrzeniPrihlasenehoVyresene)
+            {
+                <tr>
+                    <td scope="col">
+                        @Html.ActionLink(zadost.TypZadosti.ToString(), "../Zadost/KonkretniZadost", new { id = zadost.Id })
+                    </td>
+                    <td scope="col">
+                        @Html.ActionLink(@zadost.ZadostOd.Prezdivka, "../Uzivatel/Index", new { prezdivkaUzivatele = zadost.ZadostOd.Prezdivka })
+                    </td>
+
+                    @*odliším barvy textu dle vyhodnocení žádosti dle porovnání stavů*@
+                    @if (String.Compare(@zadost.StavZadosti.ToString(), "Schvalena") == 0)
+                    {
+                        <td scope="col" class="text-success">
+                            @zadost.StavZadosti
+                        </td>
+                    }
+                    else
+                    {
+                        <td scope="col" class="text-danger">
+                            @zadost.StavZadosti
+                        </td>
+                    }
+
+                    <td scope="col" class="btn btn-primary">
+                        @Html.ActionLink("Zobrazit žádost", "../Zadost/KonkretniZadost", new { id = zadost.Id })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else //žádné žádosti čekající na vyřízení přihlášeným uživatelem
+    {
+        <p> Žádné vyřízené žádosti. :)</p>
+        <br />
+    }
+
+}
+else // zobrazení žádostí přihlášeného uživatele - zobrazení čekajících a již vyřešených žádostí
+{
+
+    <div class="alert alert-success" role="alert">
+        <h5>Vaše žádosti čekající na schválení</h5>
+    </div>
+
+    if (Model.cekajiciNaPotvrzeniOstatnich.Count() != 0)  //zjistím zda existujé žádosti přihlášeného uživatele které potřebují potvrdit
+    {
+        <table class="table">
+            @foreach (var zadost in Model.cekajiciNaPotvrzeniOstatnich)
+            {
+                <tr>
+                    <td scope="col">
+                        @Html.ActionLink(zadost.TypZadosti.ToString(), "../Zadost/KonkretniZadost", new { id = zadost.Id })
+                    </td>
+                    <td scope="col">
+                        @Html.ActionLink(@zadost.ZadostKomu.Prezdivka, "../Uzivatel/Index", new { prezdivkaUzivatele = zadost.ZadostKomu.Prezdivka })
+                    </td>
+                    <td scope="col" class="text-warning">
+                        @zadost.StavZadosti
+                    </td>
+                    <td scope="col" class="btn btn-primary">
+                        @Html.ActionLink("Zobrazit žádost", "../Zadost/KonkretniZadost", new { id = zadost.Id })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else //žádné žádosti přihlášeného uživatele čekající na potvrzení
+    {
+        <p> Žádné žádosti čekající na potvrzení ostatními uživateli. :)</p>
+        <br />
+    }
+
+    <div class="alert alert-success" role="alert">
+        <h5>Vámi odeslané vyřešené žádosti</h5>
+    </div>
+
+    if (Model.cekajiciNaPotvrzeniOstatnichVyresene.Count() != 0)  //zjistím zda existujé žádosti přihlášeného uživatele které potřebují potvrdit
+    {
+        <table class="table">
+            @foreach (var zadost in Model.cekajiciNaPotvrzeniOstatnichVyresene)
+            {
+                <tr>
+                    <td scope="col">
+                        @Html.ActionLink(zadost.TypZadosti.ToString(), "../Zadost/KonkretniZadost", new { id = zadost.Id })
+                    </td>
+                    <td scope="col">
+                        @Html.ActionLink(@zadost.ZadostKomu.Prezdivka, "../Uzivatel/Index", new { prezdivkaUzivatele = zadost.ZadostKomu.Prezdivka })
+                    </td>
+
+                    @*odliším barvy textu dle vyhodnocení žádosti dle porovnání stavů*@
+                    @if (String.Compare(@zadost.StavZadosti.ToString(), "Schvalena") == 0)
+                    {
+                        <td scope="col" class="text-success">
+                            @zadost.StavZadosti
+                        </td>
+                    }
+                    else
+                    {
+                        <td scope="col" class="text-danger">
+                            @zadost.StavZadosti
+                        </td>
+                    }
+
+                    <td scope="col" class="btn btn-primary">
+                        @Html.ActionLink("Zobrazit žádost", "../Zadost/KonkretniZadost", new { id = zadost.Id })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else //žádné žádosti přihlášeného uživatele čekající na potvrzení
+    {
+        <p> Žádné dříve vyřešené žádosti ostatními uživateli. :)</p>
+        <br />
+    }
+
+}
+
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+
+
+            //po kliknutí na tuto možnost zobrazím požadavky které čekají na potvrzení přihlášeným uživatelem a zobrazím historii již vyřešených požadavků
+            $('#zadostiCekajiciNaPrihlasenehoUzivatele').click(function () {
+
+                //odeberu class active ze clanku a přidám k příspěvkům
+                $("#zadostiCekajiciNaPotvrzeniOstatnimi").removeClass("active");
+                $("#zadostiCekajiciNaPrihlasenehoUzivatele").addClass("active");
+            })
+
+
+            //po kliknutí na tuto možnost zobrazím požadavky uživatele které čekají na potvrzení ostními uživateli a zobrazím historii požadavků přihlášeného uživatele
+            $('#zadostiCekajiciNaPotvrzeniOstatnimi').click(function () {
+
+
+                //odeberu class active z prispevku a přidám ke článkům
+                $("#zadostiCekajiciNaPrihlasenehoUzivatele").removeClass("active");
+                $("#zadostiCekajiciNaPotvrzeniOstatnimi").addClass("active");
+            })
+
+
+        })
+
+    </script>
+
+}

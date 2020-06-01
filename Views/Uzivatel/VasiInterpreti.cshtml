@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DiplomovaPrace.Models.SpravceInterpreta>
+
+@{
+    ViewBag.Title = "Vaši interpreti";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<h4>Název interpreta</h4>
+
+<table class="table">
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>               
+                @Html.ActionLink(@item.Interpret.Nazev, "../Interpret/KonkretniInterpret", new { id = @item.Interpret.Id })
+            </td>
+            <td>
+                @Html.ActionLink("Přidat správce", "PridatSpravce", new { id = item.InterpretId }, new { @class = "btn btn-success" })
+
+            </td>
+        </tr>
+    }
+
+</table>

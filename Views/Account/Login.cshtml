@@ -1,0 +1,93 @@
+﻿@model DiplomovaPrace.Models.LoginViewModel
+@{
+    Layout = null;
+}
+<!------ Include the above in your HEAD tag ---------->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Přihlásit</title>
+    <!--Made with love by Mutiullah Samim -->
+    <!--Bootsrap 4 CDN-->
+    <!--Fontawesome CDN-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <!--Custom styles-->
+    <link rel="stylesheet" type="text/css" href="~/Content/login.css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card">
+
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+
+                    <div class="card-header">
+                        <h3>Přihlášení</h3>
+                        <div class="d-flex justify-content-end social_icon">
+                            <span><i class="fab fa-facebook-square"></i></span>
+                            <span><i class="fab fa-google-plus-square"></i></span>
+                            <span><i class="fab fa-twitter-square"></i></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5>@ViewBag.NeexistujiciUzivatel</h5>
+                        <form>
+                            <div class="input-group form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.Prezdivka, new { htmlAttributes = new { @class = "form-control" } })
+                                <div class="container">
+                                    <div class="row">
+                                        @Html.ValidationMessageFor(model => model.Prezdivka, "Přezdívka musí být vyplněna.", new { @class = "alert alert-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.Heslo, new { htmlAttributes = new { @class = "form-control" } })
+                                <div class="container">
+                                    <div class="row">
+                                        @Html.ValidationMessageFor(model => model.Heslo, "Heslo musí být vyplněno.", new { @class = "alert alert-danger type=password" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row align-items-center remember">
+                                @Html.CheckBoxFor(model => model.Zapamatovat, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Zapamatovat, "", new { @class = "text-danger" })
+                                @Html.LabelFor(model => model.Zapamatovat)
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Přihlásit" class="btn float-right ">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-center links">
+                            Nemáte ještě účet?
+                            @Html.ActionLink("Vytvořit účet", "Register")
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            @Html.ActionLink("Zapomenuté heslo?", "ForgotPassword")
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+﻿@model IEnumerable<DiplomovaPrace.Models.Komentar>
+
+@{
+    ViewBag.Title = "Diskuze";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link href="@Url.Content("~/Content/clankyVypis.css")" rel="stylesheet" type="text/css" />
+}
+
+@using (Html.BeginForm("ZobrazitKomentare", "Clanek", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <br />
+
+    <h4>Komentáře (@Session["pocetKomentaru"])</h4>
+
+    foreach (var komentar in Model)
+    {
+
+        <div class="row">
+            <div class="col-sm-2 text-center">
+                <img src="@Url.Content(@komentar.UzivatelOd.Avatar)" class="img-circle" height="65" width="65" alt="Avatar">
+            </div>
+            <div class="col-sm-10">
+                <h5>@Html.ActionLink(@komentar.UzivatelOd.Prezdivka, "../Uzivatel/Index", new { prezdivkaUzivatele = @komentar.UzivatelOd.Prezdivka })   <small>@komentar.DatumPridani</small></h5>
+                <p>@{ System.Net.WebUtility.HtmlDecode(komentar.Text); }</p>
+                @*<p>@komentar.Text</p>*@
+                <br>
+            </div>
+        </div>
+    }
+
+    <br />
+
+
+
+    <div class="row">
+        <div class="col">
+            <h5>Přidat komentář</h5>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <form role="form">
+                <div class="form-group">
+                    <textarea name="komentar" class="form-control col-sm-12" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Odeslat</button>
+            </form>
+            <br><br>
+        </div>
+    </div>
+
+}
+
+@*paginator*@
+<nav class="nav justify-content-center" aria-label="Page navigation example">
+    <ul class="pagination">
+
+        @* pokud je aktuální stránka větší než 1, pak zobraz číslo předchozí stránky *@
+        @if (int.Parse(Session["aktualniStrankaKomentaru"].ToString()) > 1)
+        {
+
+            <li class="page-item page-link">
+                @* vypíšu číslo stránky o 1 menší než je aktuální stránka *@
+                @Html.ActionLink((int.Parse(Session["aktualniStrankaKomentaru"].ToString())-1).ToString(), "ZobrazitKomentare", "Clanek", routeValues: new
+           {
+               //odešlu požadavek na ClanekController - Index(cisloStranky);
+               cisloStranky = (short.Parse(Session["aktualniStrankaKomentaru"].ToString())-1),
+           }, htmlAttributes: null)
+            </li>
+        }
+
+        <li class="page-item page-link">
+            @* vypíšu číslo aktuální stránky, object na String -> String na int kvůli porovnání -> int na String kvůli výpisu*@
+            @Html.ActionLink(int.Parse(Session["aktualniStrankaKomentaru"].ToString()).ToString(), "ZobrazitKomentare", "Clanek", routeValues: new
+       {
+           //odešlu požadavek na ClanekController - Index(cisloStranky);
+           cisloStranky = (short.Parse(Session["aktualniStrankaKomentaru"].ToString())),
+       }, htmlAttributes: null)
+        </li>
+
+
+        @* zjednodušeně nezobrazím možnost přepnout na následující stránku pokud další není*@
+        @if (int.Parse(Session["pocetStranekKomentaru"].ToString()) >= (int.Parse(Session["aktualniStrankaKomentaru"].ToString())))
+        {
+            <li class="page-item page-link">
+
+                @* vypíšu číslo stránky o 1 větší než je aktuální stránka *@
+                @Html.ActionLink((int.Parse(Session["aktualniStrankaKomentaru"].ToString()) + 1).ToString(), "ZobrazitKomentare", "Clanek", routeValues: new
+           {
+               //odešlu požadavek na ClanekController - Index(cisloStranky);
+               cisloStranky = (short.Parse(Session["aktualniStrankaKomentaru"].ToString()) + 1),
+           }, htmlAttributes: null)
+            </li>
+        }
+
+    </ul>
+</nav>

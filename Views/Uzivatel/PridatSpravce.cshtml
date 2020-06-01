@@ -1,0 +1,109 @@
+﻿@model DiplomovaPrace.Models.UzivatelViewModels.PridatSpravceViewModel
+
+@{
+    ViewBag.Title = "Přidat správce";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h4>@Html.DisplayName("Název interpreta:")</h4>
+        </div>
+        <div class="col-4">
+            <h4>@Html.ActionLink(Model.konkretniInterpret.Nazev, "../Interpret/KonkretniInterpret", new { id = Model.konkretniInterpret.Id }) </h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <h4>@Html.DisplayName("Celkový počet příspěvků:")</h4>
+        </div>
+        <div class="col-4">
+            <h4>@Html.DisplayFor(model => model.pocetPrispevkuInterpretaCelkem)</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <h4>@Html.DisplayName("Schválených příspěvků:")</h4>
+        </div>
+        <div class="col-4">
+            <h4>@Html.DisplayFor(model => model.pocetPrispevkuInterpretaSchvalenych)</h4>
+        </div>
+    </div>
+</div>
+
+
+<br />
+
+<h4>Seznam správců:</h4>
+
+<table class="table">
+    @for (int i = 0; i < Model.spravciInterpreta.Count(); i++)
+    {
+    <tr>
+        <td>
+            @Html.ActionLink(@Model.spravciInterpreta.ElementAt(i).Uzivatel.Prezdivka, "Index", new { prezdivkaUzivatele = @Model.spravciInterpreta.ElementAt(i).Uzivatel.Prezdivka })
+        </td>
+
+        <td class="btn btn-danger">
+            @Html.ActionLink("Odebrat správce", "OdebratSpravce", new { id = @Model.spravciInterpreta.ElementAt(i).Uzivatel.Id }, new { onclick = "return confirm('Nevratný krok! Opravdu smazat vybraného správce?');" })
+        </td>
+    </tr>
+    }
+
+</table>
+
+
+<br />
+
+<h4>Přidat správce</h4>
+<input id="hledanyUzivatel" class="form-control" placeholder="Přidat uživatele ..." />
+
+@* pokud není chybová zpráva prázdná *@
+@if(@Session["jizJeSpravce"] != null && @Session["jizJeSpravce"].ToString() != "") { 
+<h5 class="text-danger">@Session["jizJeSpravce"].ToString()</h5>
+}
+
+<br />
+
+<p>
+
+    @Html.ActionLink("Zpět na seznam", "VasiInterpreti", null, new { @class = "btn btn-success" })
+</p>
+
+@section scripts {
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+
+                //po uvolnění tlačítka při psaní vyhledávané přezdívky
+                $('#hledanyUzivatel').autocomplete({
+                    source: function (request, response) {
+                        jQuery.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            url: "/Uzivatel/VyhledaniUzivatele",
+                            data: {
+                                prezdivka: $('#hledanyUzivatel').val() },
+                            success: function (data) {
+                                response(jQuery.map(data, function (item) {
+                                    return { label: item.Prezdivka, value: item.Prezdivka, id: item.Id };
+                                }))
+                            },
+                        });
+                    },
+                    select: function (event, ui) {
+                        var link = '@Url.Action("PridatSpravcePrezdivkou", "Uzivatel", new { prezdivka = "nahradit" })';
+                        link = link.replace("nahradit", ui.item.value);
+                        location.href = link;
+                    }
+                });
+
+            });
+
+    </script>
+
+
+}

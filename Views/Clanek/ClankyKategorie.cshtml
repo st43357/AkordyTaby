@@ -1,0 +1,255 @@
+﻿@model IEnumerable<DiplomovaPrace.Models.Clanek>
+
+@{
+    ViewBag.Title = "Kategorie";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link href="@Url.Content("~/Content/clankyVypis.css")" rel="stylesheet" type="text/css" />
+}
+
+<br />
+
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-sm-3 sidenav">
+            <h4>Články</h4>
+            <ul class="nav nav-pills nav-stacked">
+
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @*přesměrování s parametrem*@
+                                @Html.ActionLink("Koncerty", "ClankyKategorie", "Clanek", routeValues: new
+                           {
+                               kategorie = "Koncerty",
+                           }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @Html.ActionLink("Nová alba", "ClankyKategorie", "Clanek", routeValues: new
+                         {
+                             kategorie = "NoveAlbum",
+                         }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @Html.ActionLink("Recenze", "ClankyKategorie", "Clanek", routeValues: new
+                         {
+                             kategorie = "Recenze",
+                         }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @Html.ActionLink("Hudební teorie", "ClankyKategorie", "Clanek", routeValues: new
+                         {
+                             kategorie = "HudebniTeorie",
+                         }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @Html.ActionLink("Ostatní", "ClankyKategorie", "Clanek", routeValues: new
+                         {
+                             kategorie = "Ostatni",
+                         }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                @*vyhledávání článků*@
+            </ul><br>
+            <div class="input-group">
+                <input id="myInput" type="text" class="form-control" @*onkeyup="vyhledavaniClanku()"*@ placeholder="Vyhledat článek">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+            </div>
+
+            <br />
+
+            @*pokud má uživatel roli redaktor*@
+            @if (User.IsInRole("redaktor"))
+            {
+                <div class="row">
+                    <div class="col btn btn-success">
+                        @Html.ActionLink("Nový článek", "Create")
+                    </div>
+                </div>
+            }
+
+
+        </div>
+        <div id="myTable" class="col-sm-9">
+
+            @*výpis článků*@
+            @foreach (var clanek in Model)
+            {
+
+                <br />
+                <div id="containerSmazat" class="container">
+                    <div class="row">
+                        <div class="col">
+                            <h2>
+                              @{  @Html.ActionLink(WebUtility.HtmlDecode(@clanek.Titulek), "KonkretniClanek", "Clanek", routeValues: new
+                             {
+                                 id = clanek.Id,
+                             }, htmlAttributes: null) }
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <p> @{ @Html.Raw(WebUtility.HtmlDecode(@clanek.Popisek)) }</p>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col">
+                            <h6><span class="glyphicon glyphicon-time"></span>@clanek.Autor.Prezdivka</h6>
+                        </div>
+                        <div class="col">
+                            <h6> @clanek.DatumVytvoreni</h6>
+                        </div>
+
+
+
+                        @* pokud je uživatel autorem článku nabídnu možnost editovat *@
+                        @if (clanek.Autor.Id == int.Parse(Session["uzivatelID"].ToString()))
+                        {
+                            <div class="col btn btn-outline-primary-edit">
+                                @Html.ActionLink("Editovat článek", "Edit", "Clanek", routeValues: new
+                         {
+                             id = clanek.Id,
+                         }, htmlAttributes: null)
+                            </div>
+                        }
+
+                        <div class="col btn btn-outline-primary">
+                            @* přesměrování na konkrétní článek s parametrem *@
+                            @Html.ActionLink("Přečíst článek", "KonkretniClanek", "Clanek", routeValues: new
+                      {
+                          id = clanek.Id,
+                      }, htmlAttributes: null)
+                        </div>
+
+
+
+
+                        <br><br>
+
+                    </div>
+                </div>
+            }
+
+            <br />
+
+            @*paginator*@
+            <nav class="nav justify-content-center" aria-label="Page navigation example">
+                <ul class="pagination">
+
+                    @* pokud je aktuální stránka větší než 1, pak zobraz číslo předchozí stránky *@
+                    @if (int.Parse(Session["aktualniStranka"].ToString()) > 1)
+                    {
+
+                        <li class="page-item page-link">
+                            @* vypíšu číslo stránky o 1 menší než je aktuální stránka *@
+                            @Html.ActionLink((int.Parse(Session["aktualniStranka"].ToString())-1).ToString(), "ClankyKategorie", "Clanek", routeValues: new
+                       {
+                           //odešlu požadavek na ClanekController - Index(cisloStranky);
+                           cisloStranky = (int.Parse(Session["aktualniStranka"].ToString())-1),
+                       }, htmlAttributes: null)
+                        </li>
+                    }
+
+                    <li class="page-item page-link">
+                        @* vypíšu číslo aktuální stránky, object na String -> String na int kvůli porovnání -> int na String kvůli výpisu*@
+                        @Html.ActionLink(int.Parse(Session["aktualniStranka"].ToString()).ToString(), "ClankyKategorie", "Clanek", routeValues: new
+                   {
+                       //odešlu požadavek na ClanekController - Index(cisloStranky);
+                       cisloStranky = (int.Parse(Session["aktualniStranka"].ToString())),
+                   }, htmlAttributes: null)
+                    </li>
+
+
+                    @* zjednodušeně nezobrazím možnost přepnout na následující stránku pokud další není*@
+                    @if (int.Parse(Session["maxPocetStranek"].ToString()) >= (int.Parse(Session["aktualniStranka"].ToString())))
+                    {
+                        <li class="page-item page-link">
+
+                            @* vypíšu číslo stránky o 1 větší než je aktuální stránka *@
+                            @Html.ActionLink((int.Parse(Session["aktualniStranka"].ToString()) + 1).ToString(), "ClankyKategorie", "Clanek", routeValues: new
+                       {
+                           //odešlu požadavek na ClanekController - Index(cisloStranky);
+                           cisloStranky = (int.Parse(Session["aktualniStranka"].ToString()) + 1),
+                       }, htmlAttributes: null)
+                        </li>
+                    }
+
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    @*<script src="@Url.Content("~/Scripts/vyhledavaniClanku.js")">debugger;</script>*@
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+
+                //po uvolnění tlačítka při psaní vyhledávané přezdívky
+                $('#myInput').autocomplete({
+                    source: function (request, response) {
+                        jQuery.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            url: "/Clanek/VyhledaniClanku",
+                            data: {
+                                titulek: $('#myInput').val() },
+                            success: function (data) {
+                                response(jQuery.map(data, function (item) {
+                                    return { label: item.Titulek, value: item.Titulek, id: item.Id };
+                                }))
+                            },
+                        });
+                    },
+                    select: function (event, ui) {
+                        var link = '@Url.Action("KonkretniClanek", "Clanek", new { id = "-1" })';
+                        link = link.replace("-1", ui.item.id);
+                        location.href = link;
+                    }
+                });
+
+            });
+
+    </script>
+}
+

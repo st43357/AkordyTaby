@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c68593f019f4463a9748dcb534a3efcf" Name="Diagram1" >
+        <EntityTypeShape EntityType="Model.Prispevek" Width="1.5" PointX="0.5" PointY="0.5" />
+        <EntityTypeShape EntityType="Model.HodnoceniPrispevku" Width="1.5" PointX="0.5" PointY="3.625" />
+        <EntityTypeShape EntityType="Model.Komentar" Width="1.5" PointX="2.875" PointY="5" />
+        <EntityTypeShape EntityType="Model.Zprava" Width="1.5" PointX="4.625" PointY="4.625" />
+        <EntityTypeShape EntityType="Model.Zadost" Width="1.5" PointX="6.5" PointY="5" />
+        <EntityTypeShape EntityType="Model.Interpret" Width="1.5" PointX="11.375" PointY="3.375" />
+        <EntityTypeShape EntityType="Model.SpravceInterpreta" Width="1.5" PointX="9.125" PointY="3.375" />
+        <EntityTypeShape EntityType="Model.Clanek" Width="1.5" PointX="9.125" PointY="0.5" />
+        <EntityTypeShape EntityType="Model.Uzivatel" Width="5.25" PointX="2.875" PointY="0.5" />
+        <AssociationConnector Association="Model.PrispevekHodnoceniPrispevku" />
+        <AssociationConnector Association="Model.PrispevekUzivatel" />
+        <AssociationConnector Association="Model.UzivatelKomentar" />
+        <AssociationConnector Association="Model.UzivatelKomentar1" />
+        <AssociationConnector Association="Model.UzivatelZprava" />
+        <AssociationConnector Association="Model.UzivatelZprava1" />
+        <AssociationConnector Association="Model.UzivatelZadost" />
+        <AssociationConnector Association="Model.UzivatelZadost1" />
+        <AssociationConnector Association="Model.UzivatelClanek" />
+        <AssociationConnector Association="Model.InterpretSpravceInterpreta" />
+        <AssociationConnector Association="Model.UzivatelSpravceInterpreta" />
+        <AssociationConnector Association="Model.PrispevekInterpret" />
+        <AssociationConnector Association="Model.KomentarClanek" />
+        <AssociationConnector Association="Model.HodnoceniPrispevkuUzivatel" />
+        <AssociationConnector Association="Model.ZadostInterpret" />
+        <AssociationConnector Association="Model.PrispevekZadost" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

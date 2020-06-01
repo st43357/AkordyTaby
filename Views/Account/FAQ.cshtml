@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "FAQ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<h2>FAQ</h2>
+
+<div class="container py-3">
+    <div class="row">
+        <div class="col-10 mx-auto">
+            <div class="accordion" id="faqExample">
+
+
+                <div class="card">
+                    <div class="card-header p-2" id="headingSix">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                Jak mohu vytvořit interpreta?
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#faqExample">
+                        <div class="card-body">
+                            Kliknutím na tlačítko "Interpreti" v navigačním menu, poté stisknutím tlačítka "Vytvořit interpreta".
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header p-2" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Vytvořil jsem interpreta, co teď?
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#faqExample">
+                        <div class="card-body">
+                            Pokud byl Vámi vytvořený požadavek o vytvoření interpreta schválen, pak jste nově správcem Vámi vytvořeného interpreta.
+                            Role správce interpreta obnáší schválování nových příspěvků (akordů, tabulatur), které vytvoří ostatní <b>zaregistrovaní</b> uživatelé.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header p-2" id="headingTwo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Mohu přijít o roli správce interpreta?
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#faqExample">
+                        <div class="card-body">
+                            Mezi nejčastější důvody ztráty funkce správce interpreta patří: <br />
+                            1) dlouhodobá neaktivita - v případě že jste jediný správce a budete dlouhodobě neaktivní, dojde k nemožnosti ostatním uživatelům přidat jakýkoliv příspěvek
+                            pod Vámi vytvořeného interpreta. Pokud víte, že budete dlouhodobě neaktivní máte možnost pomocí podpory rozšířit řadu správců o dalšího uživatele pomocí přezdívky.<br />
+                            2) potvrzení stížnosti uživatele - každý přihlášený uživatel má možnost kontakovat podporu, pokud bude stížnost na Vás jako správce interpreta uznána za pravdivou
+                            může být výsledkem ztráta funkce.
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header p-2" id="headingSeven">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                                Jak mohu vložit nový příspěvek?
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#faqExample">
+                        <div class="card-body">
+                            Prvním krokem je vyhledání interpreta, následně kliknutím na tlačítko "Nový příspěvek" a vyplněním veškerých údajů.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header p-2" id="headingFour">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                Odeslal jsem žádost o přidání příspěvku, co teď?
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#faqExample">
+                        <div class="card-body">
+                            Vaše žádost o přidání příspěvku byla odesláná správci daného interpreta. Správce má možnost žádost příjmnout nebo zamítnout s udáním důvodu.
+                            O výsledku a podrobnostech žádosti budete informován v možnostech profilu "Vaše žádosti".
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header p-2" id="headingFive">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                Jak se mohu stát redaktorem?
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseFive" class="collapse" aria-labelledby="headingfive" data-parent="#faqExample">
+                        <div class="card-body">
+                            Uživatel musí být přihlášen na svém účtu. V navigačním menu vyberte možnost "Články". Po načtení stránky se články kliknout na tlačítko
+                            "Žádost o funkci redaktora". O výsledku Vaší žádosti budete informován v možnostech profilu "Vaše žádosti".
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

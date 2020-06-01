@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Potvrzení o vytvoření";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<div class="container">
+    <div class="d-flex justify-content-center h-100">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-white">Odeslání žádosti o vytvoření příspěvku</h4>
+            </div>
+
+            <div class="card-body">
+                <form>
+                    <div class="container">
+                        <div class="row">
+                            <div class="input-group-prepend alert alert-success" role="alert">
+                                <h5>Vaše žádost o vytvoření příspěvku byla odeslána správci interpreta.<br /> Stav Vaší žádosti můžete zobrazit v kategorii Vaše žádosti.</h5>                              
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-footer">
+                <div class="d-flex justify-content-center links">
+                    <h6>Pro více informací klikněte @Html.ActionLink("zde", "FAQ", "Account").</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,142 @@
+﻿@model DiplomovaPrace.Models.Clanek
+
+@{
+    ViewBag.Title = @MvcHtmlString.Create(HttpUtility.HtmlDecode(Model.Titulek));
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@section Styles {
+    <link href="@Url.Content("~/Content/clankyVypis.css")" rel="stylesheet" type="text/css" />
+}
+
+<br />
+
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-sm-3 sidenav">
+
+            <ul class="nav nav-pills nav-stacked">
+
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @*přesměrování s parametrem*@
+                                @Html.ActionLink("Koncerty", "ClankyKategorie", "Clanek", routeValues: new
+                           {
+                               kategorie = "Koncerty",
+                           }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @Html.ActionLink("Nová alba", "ClankyKategorie", "Clanek", routeValues: new
+                           {
+                               kategorie = "NoveAlbum",
+                           }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @Html.ActionLink("Recenze", "ClankyKategorie", "Clanek", routeValues: new
+                           {
+                               kategorie = "Recenze",
+                           }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @Html.ActionLink("Hudební teorie", "ClankyKategorie", "Clanek", routeValues: new
+                           {
+                               kategorie = "HudebniTeorie",
+                           }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <li>
+                                @Html.ActionLink("Ostatní", "ClankyKategorie", "Clanek", routeValues: new
+                           {
+                               kategorie = "Ostatni",
+                           }, htmlAttributes: null)
+                            </li>
+                        </div>
+                    </div>
+
+                    @*vyhledávání článků*@
+            </ul><br>
+
+
+            <br />
+
+            @*pokud má uživatel roli redaktor*@
+            @if (User.IsInRole("redaktor"))
+            {
+                <div class="row">
+                    <div class="col btn btn-success">
+                        @Html.ActionLink("Nový článek", "Create")
+                    </div>
+                </div>
+            }
+
+
+
+        </div>
+        <div id="myTable" class="col-sm-9">
+
+            @*výpis článku*@
+
+            <div id="containerSmazat" class="container">
+                <div class="row">
+                    <div class="col">
+                        <h1>@Html.Raw(@MvcHtmlString.Create(HttpUtility.HtmlDecode(@Model.Titulek))) </h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col lead text-white">
+                        @*<p>@Html.Raw(Model.Obsah) </p>*@
+                        <p> @Html.Raw(@MvcHtmlString.Create(HttpUtility.HtmlDecode(@Model.Obsah))) </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <p>@Html.ActionLink(@Model.Autor.Prezdivka, "../Uzivatel/Index", new { prezdivkaUzivatele = @Model.Autor.Prezdivka })</p>
+                    </div>
+
+                    <div class="col">
+                        <p>@Model.DatumVytvoreni </p>
+                    </div>
+                </div>
+
+                <br />
+
+
+                <div class="col btn btn-info">
+                    @Html.ActionLink("Zobrazit komentáře", "ZobrazitKomentare", "Clanek", routeValues: new
+               {
+                   idClanku = Model.Id,
+               }, htmlAttributes: null)
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+

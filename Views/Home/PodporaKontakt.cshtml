@@ -1,0 +1,62 @@
+﻿@model DiplomovaPrace.Models.HomeViewModels.PodporaKontaktViewModel
+@{
+    ViewBag.Title = "Podpora";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("PodporaKontakt", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Kontaktní formulář</h4>
+                </div>
+                <div class="modal-body mx-3">
+
+                    <div class="container">
+                        <div class="col">
+
+                            <div class="md-form">
+                                <div class="col">
+                                    <i class="fa fa-pencil prefix grey-text"></i>
+                                    @Html.LabelFor(model => model.Predmet)
+                                </div>
+                                <div class="col">
+                                    @Html.TextBoxFor(model => model.Predmet, htmlAttributes: new { style = " width:100%; " })
+                                    @Html.ValidationMessageFor(model => model.Predmet, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <br />
+                            <div class="md-form">
+                                <div class="col">
+                                    <i class="fa fa-pencil prefix grey-text"></i>
+                                    @Html.LabelFor(model => model.Text)
+                                </div>
+                                <div class="col">
+                                    @*počet řádků, sloupců*@
+                                    @Html.TextAreaFor(model => model.Text, 20, 50, null)
+                                    @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+
+                    <div class="form-group">
+                        <input type="submit" value="Odeslat" class="btn float-right btn btn-success">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

@@ -1,0 +1,117 @@
+﻿@model DiplomovaPrace.Models.Clanek
+
+@{
+    ViewBag.Title = "Nový článek";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <br />
+
+    <h4> Nový článek </h4>
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <div class="container">
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(model => model.Titulek, htmlAttributes: new { @class = "control-label col-md-2" })
+                </div>
+                <div class="row">
+                    @Html.EditorFor(model => model.Titulek, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Titulek)
+                </div>
+            </div>
+
+            <br />
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(model => model.Kategorie, htmlAttributes: new { @class = "control-label col-md-2" })
+                </div>
+                <div class="row">
+                    @Html.EnumDropDownListFor(model => model.Kategorie, "Vyberte kategorii..", htmlAttributes: new { @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.Kategorie)
+                </div>
+            </div>
+
+            <br />
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(model => model.Popisek, htmlAttributes: new { @class = "control-label col-md-2" })
+                </div>
+                <div class="row">
+                    @Html.ValidationMessageFor(model => model.Popisek)
+                </div>
+                <div class="row">
+                    @Html.TextAreaFor(model => model.Popisek, new { htmlAttributes = new { @class = "form-control", @id = "Popisek" } })
+                </div>
+            </div>
+
+            <br />
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(model => model.Obsah, htmlAttributes: new { @class = "control-label col-md-2" })
+                </div>
+                <div class="row">
+                    @Html.ValidationMessageFor(model => model.Obsah)
+                </div>
+                <div class="row">
+                    @Html.TextAreaFor(model => model.Obsah, new { htmlAttributes = new { @class = "editor form-control", @id = "Obsah" } })
+                </div>
+            </div>
+
+            <br />
+
+        </div>
+
+        <div class="form-group">
+            <input id="odeslat" type="submit" value="Přidat článek" class="btn btn-success" />
+        </div>
+
+
+    </div>
+
+
+}
+
+@section scripts {
+
+    <script src="@Url.Content("//cdn.tinymce.com/4/tinymce.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/initTinyMCE.js")"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            //pokud je obsah nebo popisek prázdný - vrátím chybu
+            $('#odeslat').click(function () {
+
+                tinyMCE.triggerSave();
+                var content = $('#Obsah').val();
+
+                if ($('#Obsah').val().length == 0) {
+                    alert("Obsah příspěvku nemůže být prázdný!");
+                    return false;
+                } else if ($('#Popisek').val().length == 0) {
+                    alert("Popisek příspěvku nemůže být prázdný!");
+                    return false;
+                }
+            })
+
+
+        })
+
+    </script>
+
+}
+

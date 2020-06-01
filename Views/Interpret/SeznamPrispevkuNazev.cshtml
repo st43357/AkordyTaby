@@ -1,0 +1,75 @@
+﻿@model DiplomovaPrace.Models.InterpretViewModels.PrispevkyInterpretaNazev
+
+@{
+    ViewBag.Title = Session["pisenNazev"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.Label("Typ příspěvku")
+        </th>
+        <th>
+            @Html.Label("Název písně")
+        </th>
+        <th>
+            @Html.Label("Hodnocení")
+        </th>
+        <th>
+            @Html.Label("Autor")
+        </th>
+        <th>
+            @Html.Label("Datum přidání")
+        </th>
+        <th></th>
+    </tr>
+
+
+    @for (int i = 0; i < Model.seznamPrispevku.Count(); i++)
+    {
+        <tr>
+            <td>
+                @if (Model.seznamPrispevku.ElementAt(i).TypPrispevku.ToString() == "Akordy")
+                {
+                    <img src="~/Images/akordy.png" class="img-circle" height="50" width="50" alt="Avatar">
+                }
+                else
+                {
+                    <img src="~/Images/tabulatury.png" class="img-circle" height="50" width="50" alt="Avatar">
+                }
+            </td>
+            <td>
+                <h5>  @Html.ActionLink(@Model.seznamPrispevku.ElementAt(i).NazevPisne, "../Prispevek/KonkretniPrispevek", new { id = @Model.seznamPrispevku.ElementAt(i).Id }) </h5>
+            </td>
+            <td>
+                <span class="text-warning">
+                    @*<h5> @Html.Label(Model.prumerneHodnoceniPrispevku.ElementAt(i).ToString())</h5>*@
+                    @for (int j = 0; j < Model.prumerneHodnoceniPrispevku.ElementAt(i); j++)
+                    {
+                        <i class="fa fa-star"></i>//fa fa-star - plná hvězda, fa fa-star-o - prázdný hvězda
+                    }
+                    
+                    @for(int k = 0; k < (5- Model.prumerneHodnoceniPrispevku.ElementAt(i)); k++) //zbytek hodnocení doplním prázdnou hvězdou
+                    {
+                        <i class="fa fa-star-o"></i>
+                    }
+                </span>
+            </td>
+            <td>
+                <h5>
+                    @Html.ActionLink(Model.seznamPrispevku.ElementAt(i).Autor.Prezdivka, "../Uzivatel/Index", new { prezdivkaUzivatele = Model.seznamPrispevku.ElementAt(i).Autor.Prezdivka })
+                </h5>
+            </td>
+            <td>
+                <h5> @Model.seznamPrispevku.ElementAt(i).DatumPridani.ToString()</h5>
+            </td>
+        </tr>
+    }
+
+</table>
+
+

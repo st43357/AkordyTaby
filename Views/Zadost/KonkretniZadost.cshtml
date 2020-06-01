@@ -1,0 +1,273 @@
+﻿@model DiplomovaPrace.Models.Zadost
+
+@{
+    ViewBag.Title = "Úprava žádosti";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <br />
+
+    <h3>Žádost uživatele @Model.ZadostOd.Prezdivka </h3>
+
+    <div>
+
+        <hr />
+        <dl class="dl-horizontal">
+
+            <div class="container">
+
+                @if (Model.TypZadosti == DiplomovaPrace.Models.TypZadosti.ZadostPisen)
+                {
+
+                    <div class="row">
+                        <div class="col col-3">
+                            <dt>
+                                <h4>  @Html.DisplayNameFor(model => model.Interpret.Nazev):</h4>
+                            </dt>
+                        </div>
+
+                        <div class="col">
+                            <dd>
+                                <h5>  @Html.ActionLink(@Model.Interpret.Nazev, "../Interpret/KonkretniInterpret", new { id = @Model.Interpret.Id })</h5>
+                            </dd>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col col-3">
+                            <dt>
+                                <h4> @Html.DisplayNameFor(model => model.Prispevek.NazevPisne):</h4>
+                            </dt>
+                        </div>
+
+                        <div class="col">
+                            <dd>
+                                <h5>  @Html.ActionLink(Model.Prispevek.NazevPisne, "../Prispevek/KonkretniPrispevek", new { id = Model.Prispevek.Id })</h5>
+                            </dd>
+                        </div>
+                    </div>
+                }
+
+
+                <div class="row">
+                    <div class="col col-3">
+                        <dt>
+                            <h4> @Html.DisplayNameFor(model => model.ZadostOd.Prezdivka):</h4>
+                        </dt>
+                    </div>
+
+                    <div class="col">
+                        <dd>
+                            <h5>  @Html.ActionLink(Model.ZadostOd.Prezdivka, "../Uzivatel/Index", new { prezdivkaUzivatele = Model.ZadostOd.Prezdivka })</h5>
+                        </dd>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col col-3">
+                        <dt>
+                            <h4>@Html.DisplayNameFor(model => model.TypZadosti):</h4>
+                        </dt>
+                    </div>
+
+                    <div class="col">
+                        <dd>
+                            <h5> @Html.DisplayFor(model => model.TypZadosti)</h5>
+                        </dd>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col col-3">
+                        <dt>
+                            <h4>@Html.DisplayNameFor(model => model.Komentar):</h4>
+                        </dt>
+                    </div>
+
+                    <div class="col">
+                        <dd>
+                            <h5> @Html.Raw(Model.Komentar)</h5>
+                        </dd>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col col-3">
+                        <dt>
+                            <h4> @Html.DisplayNameFor(model => model.StavZadosti):</h4>
+                        </dt>
+                    </div>
+
+                    <div class="col">
+                        <div class="col">
+                            @*odliším barvy textu dle vyhodnocení žádosti dle porovnání stavů*@
+                            @if (String.Compare(@Model.StavZadosti.ToString(), "Schvalena") == 0)
+                            {
+                                <dd scope="col">
+                                    <h5 class="text-success">@Model.StavZadosti</h5>
+                                </dd>
+                            }
+                            else if (String.Compare(@Model.StavZadosti.ToString(), "Zamitnuta") == 0)
+                            {
+                                <dd scope="col">
+                                    <h5 class="text-danger">@Model.StavZadosti</h5>
+                                </dd>
+                            }
+                            else
+                            {
+                                <dd scope="col">
+                                    <h5 class="text-warning">@Model.StavZadosti</h5>
+                                </dd>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </dl>
+    </div>
+
+    <br />
+
+    @* změnit stav může uživatel pouze pokud je zaslána žádost jemu *@
+    if (int.Parse(Session["uzivatelID"].ToString()) == Model.UzivatelKomuId)
+    {
+
+        @* panel pro změnu stavu žádosti *@
+        <h3>Změna stavu žádosti</h3>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <button id="schvalena" type="button" class="btn btn-success col-12">Schválená</button>
+                </div>
+                <div class="col">
+                    <button id="cekajici" type="button" class="btn btn-warning col-12">Čekající</button>
+                </div>
+                <div class="col">
+                    <button id="zamitnuta" type="button" class="btn btn-danger col-12">Zamítnutá</button>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <br />
+
+        @* možnost zanechat komentář z důvodem schválení nebo zamítnutí *@
+        <h3>Přidat komentář</h3>
+        <div class="container col-12 form-group">
+            <div class="row">
+                <div class="col">
+                    @Html.TextAreaFor(model => model.Komentar, new { htmlAttributes = new { @class = "editor form-control", @id = "Komentar" } })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <button id="odeslatKomentar" type="button" class="btn btn-success">Odeslat komentář</button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section scripts {
+
+    <script src="@Url.Content("//cdn.tinymce.com/4/tinymce.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/initTinyMCE.js")"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            //pokud je obsah nebo popisek prázdný - vrátím chybu
+            $('#odeslatKomentar').click(function () {
+
+                tinyMCE.triggerSave();
+                var content = $('#Komentar').val();
+
+                if ($('#Komentar').val().length == 0) {
+                    alert("Komentář nemůže být prázdný!");
+                    return false;
+                }
+
+                    $.ajax({
+                        url: "@Url.Action("PridatKomentar", "Zadost")",
+                        type: "post",
+                        data: { textKomentare: $('#Komentar').val() },
+                    })
+                    //po dokončení AJAXu obnovim vše v elementu <body>
+                    .done(function (view) {
+                        window.location.reload();
+                    })
+
+            });
+
+
+
+            //stisknutí tlačítka Schválená
+            $('#schvalena').click(function () {
+                $.ajax({
+                    url: "@Url.Action("KonkretniZadost", "Zadost")",
+                    type: "post",
+                    data: { novyStavZadosti: "schvalena" },
+                })
+                    //po dokončení AJAXu obnovim vše v elementu <body>
+                    .done(function (view) {
+                        window.location.reload();
+                    })
+            })
+
+
+
+            //stisknutí tlačítka Čekající
+            $('#cekajici').click(function () {
+                $.ajax({
+                    url: "@Url.Action("KonkretniZadost", "Zadost")",
+                    type: "post",
+                    data: { novyStavZadosti: "cekajici" },
+                })
+                    //po dokončení AJAXu obnovim vše v elementu <body>
+                    .done(function (view) {
+                        window.location.reload();
+                    })
+            })
+
+
+            //stisknutí tlačítka Zamítnuta
+            $('#zamitnuta').click(function () {
+                $.ajax({
+                    url: "@Url.Action("KonkretniZadost", "Zadost")",
+                    type: "post",
+                    data: { novyStavZadosti: "zamitnuta" },
+                })
+                    //po dokončení AJAXu obnovim vše v elementu <body>
+                    .done(function (view) {
+                        window.location.reload();
+                    })
+            })
+
+        })
+
+
+
+    </script>
+
+}
+
+
+

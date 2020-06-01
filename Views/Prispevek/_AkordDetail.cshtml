@@ -1,0 +1,11 @@
+﻿@model DiplomovaPrace.Models.PrispevekViewModels.AkordViewModel
+
+@* zobrazí pouze tvar akordu *@
+@*<img src=@Model.akordAdresa height="200" width="200" alt="Avatar">*@
+
+<a href="https://akordiky.cz/@Model.akordAdresa">
+    @{
+        String akord = "https://akordiky.cz/img/chords/svg/"+@Model.akordAdresa+ "_1.svg";
+        <img height="118" width="138" src="@Url.Content(akord)" >
+    }
+</a>

@@ -1,0 +1,123 @@
+﻿@model DiplomovaPrace.Models.Prispevek
+
+@{
+    ViewBag.Title = Model.NazevPisne;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<div>
+    <hr />
+
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <h1> @Model.NazevPisne </h1>
+            <span class="text-warning float-right">
+                <i class="ratingStar fa fa-star-o" data-value="1"></i>
+                <i class="ratingStar fa fa-star-o" data-value="2"></i>
+                <i class="ratingStar fa fa-star-o" data-value="3"></i>
+                <i class="ratingStar fa fa-star-o" data-value="4"></i>
+                <i class="ratingStar fa fa-star-o" data-value="5"></i>
+            </span>
+        </div>
+
+        <input type="hidden" name="Hodnoceni" id="ratingsValue" />
+
+        <div class="row justify-content-md-center">
+            <h4 id="obsah">@Html.Raw(@Model.Obsah))</h4>
+        </div>
+
+        <div class="row">
+            <div id="Obsah" class="col-10">
+                @Html.ActionLink(@Model.Autor.Prezdivka, "../Uzivatel/Index", new { prezdivkaUzivatele = @Model.Autor.Prezdivka })
+            </div>
+
+            <div class="col align-self-end">
+                @Model.DatumPridani
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts {
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+    <script>
+
+
+        //vyplnění hvězd po přejetí myší
+        $(document).ready(function () {
+
+            //zvýraznění akordů zapsaných v []
+            //získám obsah příspěvku
+            var text = "@Html.Raw(@MvcHtmlString.Create(HttpUtility.HtmlDecode(Model.Obsah)))";
+
+            //získání hodnoty z hranatých závorek = získání názvu akordu, obalím html tagem <sup> který nadzvedne název akordu + pomocí $& vypíšu název akordu
+            text = text.replace(/(?<=\[).+?(?=\])/g, '<sup style=color:blue; data-id="$&">$&</sup>');
+            text = text.replace(/\[/g, '');
+            text = text.replace(/\]/g, '');
+
+
+            //starší verze řešení problému pomocí regex
+            //odeberu znak [ který nahradím HTML tagem <sup> s nastaveným stylem + označením akordu
+            //text = text.replace(/\[/g, '<sup style=color:blue; data-id="C">');
+            //odeberu znak ] který nahradím HTML tagem </sup>
+            //text = text.replace(/\]/g, '</sup>');
+
+            //upravím podobu obsahu kterou dosadím do webové stránky
+            $('#obsah').html(text);
+
+
+
+
+            //zobrazení tvaru akordu
+            $(document).tooltip({
+                items: "h4[id*=obsah] sup",
+                position: { my: "left+15 top", at: "right center" },
+                content: function (callback) {
+                    var nazevAkordu = $(this).attr("data-id");
+                    $.ajax({
+                        type: "GET",
+                        url: '/Prispevek/AkordDetail',
+                        data: { akord: nazevAkordu },
+                        // událost dokončení požadavku
+                    }).done(function (data) {
+                        callback(data);
+                    });
+                }
+            });
+
+
+
+
+
+
+            $(".ratingStar").hover(function () {
+                //3) odebrání označené hvězdu - pokud chci zmenšit hodnocení
+                $(".ratingStar").addClass("fa-star-o").removeClass("fa-star");
+
+                //1) vymění prázdnou hvězdu za vyplněnou
+                $(this).addClass("fa-star").removeClass("fa-star-o");
+                //2) označí všechny hvězdy před aktuální hvězdou
+                $(this).prevAll(".ratingStar").addClass("fa-star").removeClass("fa-star-o");
+
+                //4) získání hodnoty hodnocení, zavolání metody na InterpretControlleru a uložení do databáze
+                $(".ratingStar").click(function () {
+                    let starValue = $(this).attr("data-value");
+                    $("#ratingsValue").val(starValue);
+
+                    $.ajax({
+                        url: "@Url.Action("SeznamPrispevkuNazev", "Interpret")",
+                        type: "post",
+                        data: { hodnoceni: $("#ratingsValue").val() }
+                    });
+                });
+        });
+        });
+    </script>
+}

@@ -1,0 +1,124 @@
+﻿@model DiplomovaPrace.Models.Prispevek
+
+@{
+    ViewBag.Title = "Úprava příspěvku";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<h4>Úprava příspěvku</h4>
+
+<br />
+
+@using (Html.BeginForm("Edit", "Prispevek", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NazevPisne, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NazevPisne, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NazevPisne, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TypPrispevku, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.TypPrispevku, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TypPrispevku, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Obsah, htmlAttributes: new { @class = "control-label col-md-2" })
+            @* nápověda jak správně vkládat příspěvky - zobrazí modální okno *@
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#napoveda">
+                <i class="fa fa-question"></i>
+            </button>
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Obsah, new { htmlAttributes = new { @class = "editor form-control", @id = "Obsah" } })
+                @Html.ValidationMessageFor(model => model.Obsah, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="odeslat" type="submit" value="Upravit" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="napoveda" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLongTitle">Jak správně vložit příspěvek?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>Akordy</h4>
+                <p>
+                    Akord lze přidat do vaší písně pomocí symbolů hranatých závorek [] s názvem akordu přímo do textu písně. <br />
+                    Příklady správného psaní akordů: [C] [Cmi] [C7] [Cmi7] [Cmaj7] [Cdim7] [C6] [C9] [C#] [C#mi] [C#7] ... <br />
+                </p>
+
+                <h4>Taby</h4>
+                <p>
+                    V případě tabulatur dodržujte následujicí podobu: <br />
+                    E--------------------------------------------------------<br />
+                    H--------------------------------------------------------<br />
+                    G--------------------------------------------------------<br />
+                    D--------------------------------------------------------<br />
+                    A--------------------------------------------------------<br />
+                    E--------------------------------------------------------<br />
+
+                </p>
+
+                <p>
+                    Pokud příspěvek nesplňuje výše zmíněné normy, nebude schválen.
+                </p>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="@Url.Content("//cdn.tinymce.com/4/tinymce.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/initTinyMCE.js")"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#odeslat').click(function () {
+
+                tinyMCE.triggerSave();
+                var content = $('#Obsah').val();
+
+                if ($('#Obsah').val().length == 0) {
+                    alert("Obsah příspěvku nemůže být prázdný!");
+                    return false;
+                }
+            })
+        })
+
+    </script>
+
+}
+

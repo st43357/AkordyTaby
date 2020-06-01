@@ -1,0 +1,145 @@
+﻿@model DiplomovaPrace.Models.UzivatelViewModels.ProfilViewModel
+
+@{
+    ViewBag.Title = "Profil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Index", "Uzivatel", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <br />
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-3 mini-box">
+                <img src="@Url.Content(@Model.prihlasenyUzivatel.Avatar)" class="img-circle" height="200" width="200" alt="Avatar">
+
+                @* pokud přihlášený uživatel vyhledal profil někoho jiného == nezobrazil vlastní profil -> nedám možnost změnit avatara *@
+                @if(String.Compare(Session["prezdivka"].ToString(), Model.prihlasenyUzivatel.Prezdivka) == 0) { 
+
+                <input type="file" class="form-control-file" id="inputFile" aria-describedby="fileHelp" name="file">  @*name - název parametry volané metody*@
+                <input class="btn btn-warning" type="submit" value="Odeslat" />
+                @* TemData protože po jednom přečtení jsou smazaná *@
+                if (TempData["ChybaNahraniSouboru"] != null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @TempData["ChybaNahraniSouboru"]
+                    </div>
+                }
+                }
+            </div>
+
+
+            <div class="col-5">
+                <div class="row">
+                    <h4>Profil uživatele @Model.prihlasenyUzivatel.Prezdivka @*@Session["prezdivka"]*@ </h4>
+                </div>
+
+                <div class="row">
+                    <div class="col mini-box">@Html.DisplayNameFor(model => model.prihlasenyUzivatel.Prezdivka):</div>
+                    <div class="col mini-box">@Html.DisplayFor(model => model.prihlasenyUzivatel.Prezdivka)</div>
+                </div>
+                <div class="row">
+                    <div class="col mini-box">@Html.DisplayNameFor(model => model.prihlasenyUzivatel.Hodnost):</div>
+                    <div class="col mini-box">@Html.DisplayName(@Session["hodnostUzivatele"].ToString())</div>
+                </div>
+
+                <div class="row">
+                    <div class="col mini-box">@Html.DisplayNameFor(model => model.prihlasenyUzivatel.Email):</div>
+                    <div class="col mini-box">@Html.DisplayFor(model => model.prihlasenyUzivatel.Email)</div>
+                </div>
+
+                <div class="row">
+                    <div class="col mini-box">@Html.DisplayNameFor(model => model.prihlasenyUzivatel.Jmeno):</div>
+                    <div class="col mini-box">@Html.DisplayFor(model => model.prihlasenyUzivatel.Jmeno)</div>
+                </div>
+
+                <div class="row">
+                    <div class="col mini-box">@Html.DisplayNameFor(model => model.prihlasenyUzivatel.Prijmeni):</div>
+                    <div class="col mini-box">@Html.DisplayFor(model => model.prihlasenyUzivatel.Prijmeni)</div>
+                </div>
+
+                <div class="row">
+                    <div class="col mini-box">@Html.DisplayNameFor(model => model.prihlasenyUzivatel.Mesto):</div>
+                    <div class="col mini-box">@Html.DisplayFor(model => model.prihlasenyUzivatel.Mesto)</div>
+                </div>
+
+                <div class="row">
+                    <div class="col mini-box">@Html.DisplayNameFor(model => model.prihlasenyUzivatel.DatumNarozeni):</div>
+                    <div class="col mini-box">@Html.DisplayFor(model => model.prihlasenyUzivatel.DatumNarozeni)</div>
+                </div>
+
+                <div class="row">
+                    <div class="col mini-box">@Html.DisplayNameFor(model => model.prihlasenyUzivatel.DatumRegistrace):</div>
+                    <div class="col mini-box">@Html.DisplayFor(model => model.prihlasenyUzivatel.DatumRegistrace)</div>
+                </div>
+
+                <div class="row">
+                    <div class="col mini-box">@Html.DisplayNameFor(model => model.prihlasenyUzivatel.PosledniAktivita):</div>
+                    <div class="col mini-box">@Html.DisplayFor(model => model.prihlasenyUzivatel.PosledniAktivita)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <br />
+
+    <div class="alert alert-primary" role="alert">
+        Nejnovější příspěvky uživatele
+    </div>
+
+    if (Model.nejnovejsiPrispevky.Count() != 0)
+    {
+        <table class="table">
+            @foreach (var prispevek in Model.nejnovejsiPrispevky)
+            {
+                <tr>
+                    <td scope="col">                  
+                        @Html.ActionLink(@prispevek.Interpret.Nazev, "../Interpret/KonkretniInterpret", new { id = prispevek.InterpretId })
+                    </td>
+                    <td scope="col">
+                        @Html.ActionLink(prispevek.NazevPisne, "../Prispevek/KonkretniPrispevek", new { id = prispevek.Id })
+                    </td>
+                    <td scope="col">
+                        @prispevek.TypPrispevku
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>Uživatel nemá žádný vložený příspěvek. :/</p>
+    }
+
+    <div class="alert alert-primary" role="alert">
+        Nejnovější články uživatele
+    </div>
+
+
+    if (Model.nejnovejsiClanky.Count() != 0)
+    {
+        <table class="table">
+            @foreach (var clanek in Model.nejnovejsiClanky)
+            {
+                <tr>
+                    <td scope="col">
+                       @{ @Html.ActionLink(WebUtility.HtmlDecode(clanek.Titulek), "KonkretniClanek", "Clanek", routeValues: new { id = clanek.Id, }, htmlAttributes: null) }
+                    </td>
+                    <td scope="col">
+                        @clanek.Kategorie
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>Uživatel nemá žádný vložený článek. :/</p>
+    }
+
+
+}

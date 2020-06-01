@@ -1,0 +1,222 @@
+﻿@model DiplomovaPrace.Models.ZpravaViewModel.VypisZpravIndex
+@{
+    ViewBag.Title = "Zprávy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/Content/chat.css" />
+}
+<div id="frame">
+    <div id="sidepanel">
+        <div id="contacts">
+            @*výpis uživatelů*@
+            @foreach (var uzivatel in Model.seznamUzivatelu)
+            {
+                <ul>
+                    <li class="contact" data-value="@uzivatel.Id">
+                        <a href=@Url.Action("Index", "Zprava", new { idUzivatele = uzivatel.Id })>
+
+                            <div class="wrap">
+                                <img src="@Url.Content(uzivatel.Avatar)" alt="profilové foto" />
+                                <div class="meta">
+                                    <p class="name">@uzivatel.Prezdivka</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            }
+
+        </div>
+        <div id="bottom-bar">
+            @* po kliknutí spustí modální okno pro přidání kontaktu *@
+            <button id="addcontact" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i><span>Přidat kontakt</span></button>
+        </div>
+    </div>
+
+    <input type="hidden" name="idOdesilatele" id="idOdesilatele" />
+
+    <div id="content" class="content">
+        <div id="messages" class="messages">
+            @*výpis zpráv*@
+            @foreach (var zprava in Model.seznamZprav)
+            {
+                <ul>
+
+                    @*pokud autorem zprávy není přihlášený uživatel*@
+                    @if (zprava.UzivatelKomuId == int.Parse(Session["uzivatelID"].ToString()))
+                    {
+                        if (zprava == Model.seznamZprav.Last()) //pokud je zprava posledni - potrebuji oznacit div posledni tagem - nyní se nová zpráva vždy připojí za poslední zprávu
+                        {
+                            <li class="posledni sent">
+                                <img src="@Url.Content(Model.avatarKomu)" />
+                                <p> @zprava.Text </p>
+                                <div class="btn pull-right">@zprava.CasOdeslani</div>
+                            </li>
+                        }
+                        else //pokud zpráva poslední není tak neoznačím tagem
+                        {
+                            <li class="sent">
+                                <img src="@Url.Content(Model.avatarKomu)" />
+                                <p> @zprava.Text </p>
+                                <div class="btn pull-right">@zprava.CasOdeslani</div>
+                            </li>
+                        }
+
+                    }
+                    else
+                    { /*pokud autorem zprávy je aktuálně přihlášený uživatel*/
+
+                        if (zprava == Model.seznamZprav.Last()) //pokud je zprava posledni - potrebuji oznacit div posledni tagem - nyní se nová zpráva vždy připojí za poslední zprávu
+                        {
+                            <li class="posledni replies">
+                                <img src="@Url.Content(Model.avatarOd)" />
+                                <p>@zprava.Text</p>
+                                <div class="btn pull-left">@zprava.CasOdeslani</div>
+                            </li>
+                        }
+                        else //pokud zpráva poslední není tak neoznačím tagem
+                        {
+                            <li class="replies">
+                                <img src="@Url.Content(Model.avatarOd)" />
+                                <p>@zprava.Text</p>
+                                <div class="btn pull-left">@zprava.CasOdeslani</div>
+                            </li>
+                        }
+                    }
+                </ul>
+            }
+
+
+        </div>
+        <div class="message-input">
+            <div class="wrap w-100">
+                <input id="textZpravy" class="textZpravy" type="text" placeholder="Napsat zprávu..." />
+                <button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* START modální okno - přidat kontakt *@
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Přidat kontakt</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="container">
+
+                <div class="row">
+                    <div class="modal-body">
+                        Přezdívka uživatele:
+                    </div>
+                </div>
+
+                <input class="form-group col-sm-10" id="prezdivkaUzivatele" type="text" placeholder="Přezdívka uživatele..." />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                <button id="pridatKontakt" type="button" class="btn btn-primary">Uložit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* END modální okno - přidat kontakt*@
+
+
+@section scripts {
+    <script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script>
+    @*<script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>*@
+    @*<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>*@
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>*@
+
+    <script>
+        $(document).ready(function () {
+
+            //$.ajaxPrefilter(function (options, original_Options, jqXHR) {
+            //    options.async = true;
+            //});
+
+            //přidání kontaktu
+            $('#pridatKontakt').click(function () {
+                //po kliknutí zavolám metodu pro přidání kontaktu na ZpravaController
+                     $.ajax({
+                        url: "@Url.Action("PridatKontakt", "Zprava")",
+                         type: "post",
+                         data: { prezdivkaUzivatele: $("#prezdivkaUzivatele").val() },
+                         success: function (response) {
+                             if (!response.success) { //uživatel nenalezen
+                                 //zobrazím chybu, obnovím stránku protože vracím Json - vrátí prázdnou stránku
+                                 alert("Uživatel se zadanou přezdívkou neexistuje!");
+                                 window.location.reload();
+                             } else {
+                                 //uživatel existuje - obnovím pouze stránku
+                                 window.location.reload();
+                             }
+                         },
+                })
+                      //po dokončení AJAXu obnovim vše v elementu <body>
+                      .done(function (view) {
+                          $('modal fade').hide();
+                          $("body").html(view);
+
+                    })
+
+            })
+
+            $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+
+             $(".contact").click(function () {
+
+                //odeberu všem třídám .contact hodnotu active
+                $(".contact").removeClass("active");
+
+                //aktuálnímu prvku na který jsem kliknul přidám třídu active
+                $(this).addClass("active");
+
+            });
+
+
+            function newMessage() {
+                message = $(".message-input input").val();
+                if ($.trim(message) == '') {
+                    return false;
+                }
+                $('<li class="replies"><img src="@Url.Content(Model.avatarOd)" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul li .posledni'));
+                //$('.message-input input').val(null);
+                $('.contact.active .preview').html('<span>You: </span>' + message);
+                $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+            };
+
+            //odeslání zprávy
+            $('.submit').click(function () {
+                newMessage();
+                  //zavolám metodu pro přidání nové zprávy po kliknutí na tlačítko odeslat
+                $.ajax({
+                    url: "@Url.Action("VlozitKomentar", "Zprava")",
+                    type: "post",
+                    data: { textZpravy: $('#textZpravy').val() },
+
+                    })
+                      //po dokončení AJAXu obnovim vše v elementu <body>
+                     .done(function (view) {
+                         $("body").html(view);
+
+                      })
+            });
+
+
+
+        });
+    </script>
+
+
+}
